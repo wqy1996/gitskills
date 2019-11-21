@@ -4,9 +4,7 @@ const querySql = require("../util/mysql")
 
 router.post('/register', function (req, res) {
 	let { realName, userName, userAvatar, password, userRole, phone, status } = req.query
-
 	let params = [realName, userName, userAvatar, password, userRole, phone, status];
-
 	let sql = `INSERT INTO user VALUES (null, ?, ?, ?, ?, ?, now(), ?,?)`;
 	let config = {
 		sql,
