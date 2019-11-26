@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router()
 const querySql = require("../util/mysql")
 
-router.post('/register', function (req, res) {
+let register = function (req, res) {
 	let { realName, userName, userAvatar, password, userRole, phone, status } = req.query
 	let params = [realName, userName, userAvatar, password, userRole, phone, status];
 	let sql = `INSERT INTO user VALUES (null, ?, ?, ?, ?, ?, now(), ?,?)`;
@@ -15,10 +15,9 @@ router.post('/register', function (req, res) {
 	}).catch(err => {
 		res.send('报错:' + err)
 	})
-})
+}
 
-
-router.get('/login', function (req, res) {
+let login = function (req, res) {
 	let sql = 'SELECT user_name FROM user WHERE user_name = "刘能"'
 	querySql({
 		sql,
@@ -29,6 +28,23 @@ router.get('/login', function (req, res) {
 		res.send('报错:' + err)
 	})
 
-})
+}
 
+
+let apis = [
+	{
+		methods: 'post',
+		url: '/register',
+		callback: register
+	},
+	{
+		methods: 'get',
+		url: '/login',
+		callback: login
+	}
+]
+
+for (const item of apis) {
+	router[item.methods](item.url, item.callback)
+}
 module.exports = router
