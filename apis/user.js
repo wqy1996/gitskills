@@ -1,5 +1,5 @@
-const querySql = require("../util/mysql")
-const utils = require('../util/util')
+const mysql = require("../utils/mysql")
+const utils = require('../utils/util')
 const response = utils.response
 // 注册
 let register = function (req, res) {
@@ -10,7 +10,7 @@ let register = function (req, res) {
 		sql,
 		params
 	}
-	querySql(config).then(resoult => {
+	mysql(config).then(resoult => {
 		response(res, "添加成功")
 	}).catch(err => {
 		response(res, err)
@@ -21,7 +21,7 @@ let register = function (req, res) {
 // 登录
 let login = function (req, res) {
 	let sql = 'SELECT user_name userName FROM user WHERE user_name = "刘能"'
-	querySql({
+	mysql({
 		sql,
 		params: []
 	}).then(resoult => {

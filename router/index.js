@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router()
-const { register, login } = require('./user.js')
+// 用户登录，注册
+const { register, login } = require('../apis/user.js')
+
+// 商品类别
+const {addWaresType} = require('../apis/wares/waresType')
 
 const apis = [
 	{
@@ -12,6 +16,11 @@ const apis = [
 		methods: 'get',
 		url: '/login',
 		callback: login
+	},
+	{
+		methods: 'post',
+		url:'/waresType/addType',
+		callback:addWaresType
 	}
 ]
 
