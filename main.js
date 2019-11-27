@@ -2,10 +2,10 @@ const express = require('express')
 const fs = require('fs')
 const path = require('path')
 const app = express()
-let user = require("./router/user")
+let api = require("./router/index")
 
 
-app.use('/user', user)
+app.use('/api', api)
 
 app.use(express.static(path.resolve(__dirname, './dist')))
 app.get('/', function (req, res) {
