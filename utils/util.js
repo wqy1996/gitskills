@@ -1,14 +1,20 @@
 // 请求成功后的返回结果
-function response(res, data) {
+function response(res, status, data) {
 	if (data.errno) {
 		res.send({
-			status: data.errno,
+			status,
 			msg: 'sql_error',
 			data
 		})
+		// } else if (data.msg) {
+		// 	res.send({
+		// 		status,
+		// 		msg: 'error',
+		// 		data: '数据重复'
+		// 	})
 	} else {
 		res.send({
-			status: 200,
+			status,
 			msg: 'success',
 			data
 		})

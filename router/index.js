@@ -4,7 +4,7 @@ const router = express.Router()
 const { register, login } = require('../apis/user.js')
 
 // 商品类别
-const {addWaresType} = require('../apis/wares/waresType')
+const { delWaresType, addWaresType, updateWaresType } = require('../apis/wares/waresType')
 
 const apis = [
 	{
@@ -19,9 +19,19 @@ const apis = [
 	},
 	{
 		methods: 'post',
-		url:'/waresType/addType',
-		callback:addWaresType
-	}
+		url: '/waresType/addType',
+		callback: addWaresType
+	},
+	{
+		methods: 'post',
+		url: '/waresType/updateType',
+		callback: updateWaresType
+	},
+	{
+		methods: 'post',
+		url: '/waresType/delType',
+		callback: delWaresType
+	},
 ]
 
 for (const item of apis) {
