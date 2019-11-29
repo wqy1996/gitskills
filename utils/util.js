@@ -6,12 +6,12 @@ function response(res, status, data) {
 			msg: 'sql_error',
 			data
 		})
-		// } else if (data.msg) {
-		// 	res.send({
-		// 		status,
-		// 		msg: 'error',
-		// 		data: '数据重复'
-		// 	})
+	} else if (status !== 200) {
+		res.send({
+			status,
+			msg: 'error',
+			data
+		})
 	} else {
 		res.send({
 			status,
@@ -19,7 +19,6 @@ function response(res, status, data) {
 			data
 		})
 	}
-	res.send()
 }
 
 module.exports = { response }

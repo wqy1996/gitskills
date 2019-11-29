@@ -53,17 +53,19 @@ let updateWaresType = async function (req, res) {
 // 删除类别
 let delWaresType = async function (req, res) {
 	let { typeId } = req.body
-	function recursion(id) {
+	// 声明一个递归函数
+	function getTree(id) {
 		//  先查询是否有子集
 		let selectSql = `SELECT type_id FROM wares_type  WHERE  parent_id = ?`
 		mysql({ sql: selectSql, params: [id] }).then(resoult => {
+			// 删除语句
+			let delSql = `DELETE FROM wares_type WHERE type_id = ?`
 			// 如果有子集那么挂起进入递归
 			if (resoult.length) {
 				for (const item of resoult) {
-					recursion(item.type_id)
+					getTree(item.type_id)
 				}
 				// 结束之后把自己删掉
-				let delSql = `DELETE FROM wares_type WHERE type_id = ?`
 				mysql({ sql: delSql, params: [id] }).then(resoult => {
 					return
 				}).catch(err => {
@@ -71,7 +73,6 @@ let delWaresType = async function (req, res) {
 				})
 			} else {
 				// 如果没有子集那么删除当前类型，然后退出递归 
-				let delSql = `DELETE FROM wares_type WHERE type_id = ?`
 				mysql({ sql: delSql, params: [id] }).then(resoult => {
 					return
 				}).catch(err => {
@@ -82,10 +83,42 @@ let delWaresType = async function (req, res) {
 			response(res, 300, err)
 		})
 	}
-	recursion(typeId)
+	getTree(typeId)
 	response(res, 200, '删除成功')
 }
 
-// 1 3 4 7 8
+// 查询类别
+let getWaresTypes = function (req, res) {
+	let selectSql = `SELECT parent_id parentId, type_id typeId, type_name typeName from wares_type ORDER BY type_id`
+	mysql({ sql: selectSql, params: [] }).then(resoult => {
+		let treeArr = []
+		// 先循环表格
+		for (const item of resoult) {
+			// 如果有parentId
+			if (!item.parentId) {
+				// 没有的话创建一级节点
+				treeArr.push(item)
+			}
+		}
 
-module.exports = { addWaresType, updateWaresType, delWaresType }
+		function getTree(treeArr) {
+			for (const item1 of resoult) {
+				for (const item2 of treeArr) {
+					if (item2.typeId === item1.parentId) {
+						if (item2.children) {
+							item2.children.push(item1)
+						} else {
+							item2.children = [item1]
+						}
+						getTree(item2.children)
+					}
+				}
+			}
+		}
+		getTree(treeArr)
+		response(res, 200, treeArr)
+	}).catch(err => {
+		response(res, 300, err)
+	})
+}
+module.exports = { addWaresType, updateWaresType, delWaresType, getWaresTypes }
