@@ -87,35 +87,11 @@ let delWaresType = async function (req, res) {
 	response(res, 200, '删除成功')
 }
 
-// 查询类别
+// 查询类别获取树形结构
 let getWaresTypes = function (req, res) {
 	let selectSql = `SELECT parent_id parentId, type_id typeId, type_name typeName from wares_type ORDER BY type_id`
 	mysql({ sql: selectSql, params: [] }).then(resoult => {
-		let treeArr = []
-		// 先循环表格
-		for (const item of resoult) {
-			// 如果有parentId
-			if (!item.parentId) {
-				// 没有的话创建一级节点
-				treeArr.push(item)
-			}
-		}
-
-		function getTree(treeArr) {
-			for (const item1 of resoult) {
-				for (const item2 of treeArr) {
-					if (item2.typeId === item1.parentId) {
-						if (item2.children) {
-							item2.children.push(item1)
-						} else {
-							item2.children = [item1]
-						}
-						getTree(item2.children)
-					}
-				}
-			}
-		}
-		getTree(treeArr)
+		let treeArr = util.getTreeArr(resoult, 'typeId', 'parentId')
 		response(res, 200, treeArr)
 	}).catch(err => {
 		response(res, 300, err)
