@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router()
 // 用户登录，注册
-const { register, login } = require('../apis/user.js')
+const { register, login, isRegister } = require('../apis/users/user.js')
 
 // 商品类别
 const { delWaresType, getWaresTypes, addWaresType, updateWaresType } = require('../apis/wares/waresType')
@@ -13,9 +13,14 @@ const apis = [
 		callback: register
 	},
 	{
-		methods: 'get',
+		methods: 'post',
 		url: '/login',
 		callback: login
+	},
+	{
+		methods: 'get',
+		url: '/isRegister',
+		callback: isRegister
 	},
 	{
 		methods: 'post',
