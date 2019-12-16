@@ -5,7 +5,7 @@ const pool = mysql.createPool({
 	port: 3306,
 	database: 'first_app',
 	user: 'root',
-	password: '1234'
+	password: 'root'
 })
 
 module.exports = function querySql(config) {
@@ -19,17 +19,3 @@ module.exports = function querySql(config) {
 		})
 	})
 }
-
-
-// 封装
-// function query(sql, params, callback) {
-// 	pool.getConnection(function (err, connection) {
-// 		connection.query(sql, params, function (err, results) {
-// 			if (err) {
-// 				console.log('报错' + err);
-// 			}
-// 			callback.send(err || "添加成功") // 结果回调
-// 			connection.release() // 释放连接资源 | 跟 connection.destroy() 不同，它是销毁
-// 		})
-// 	})
-// }

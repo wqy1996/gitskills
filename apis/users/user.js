@@ -63,10 +63,23 @@ let login = function (req, res) {
 	}).catch(err => {
 		response(res, 300, err)
 	})
-
-
-
 }
 
-module.exports = { login, register, isRegister }
+let userApi = [{
+	methods: 'post',
+	url: '/register',
+	callback: register
+},
+{
+	methods: 'post',
+	url: '/login',
+	callback: login
+},
+{
+	methods: 'get',
+	url: '/isRegister',
+	callback: isRegister
+}]
+
+module.exports = userApi
 

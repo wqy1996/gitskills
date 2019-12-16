@@ -97,4 +97,27 @@ let getWaresTypes = function (req, res) {
 		response(res, 300, err)
 	})
 }
-module.exports = { addWaresType, updateWaresType, delWaresType, getWaresTypes }
+
+let waresTypeApi = [
+	{
+		methods: 'post',
+		url: '/waresType/addType',
+		callback: addWaresType
+	},
+	{
+		methods: 'post',
+		url: '/waresType/updateType',
+		callback: updateWaresType
+	},
+	{
+		methods: 'post',
+		url: '/waresType/delType',
+		callback: delWaresType
+	},
+	{
+		methods: 'get',
+		url: '/waresType/getType',
+		callback: getWaresTypes
+	},
+]
+module.exports = waresTypeApi
