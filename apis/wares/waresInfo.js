@@ -26,6 +26,21 @@ let updateWaresInfo = function (req, res) {
 	})
 }
 
+
+// 删除商品
+let delWaresInfo = function (req, res) {
+	let { waresId } = req.body
+	let sql = "DELETE FROM wares_info WHERE wares_id = ?"
+	mysql({
+		sql, params: [waresId]
+	}).then(resoult => {
+		response(res, 200, '操作成功')
+	}).catch(err => {
+		response(res, 300, err)
+	})
+}
+
+
 let waresInfoApi = [
 	{
 		methods: 'post',
@@ -36,6 +51,11 @@ let waresInfoApi = [
 		methods: 'post',
 		url: '/wares/updateWaresInfo',
 		callback: updateWaresInfo
+	},
+	{
+		methods: 'post',
+		url: '/wares/delWaresInfo',
+		callback: delWaresInfo
 	},
 ]
 module.exports = waresInfoApi
