@@ -3,9 +3,11 @@ const fs = require('fs')
 const path = require('path')
 const app = express()
 const bodyParser = require('body-parser');
+
+
 let api = require("./router/index")
 app.use(bodyParser.urlencoded({
-	extended: true
+	extended: false
 }));
 
 app.use('/api', api)
