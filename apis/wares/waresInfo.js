@@ -1,6 +1,5 @@
 const mysql = require("../../utils/mysql")
 const util = require("../../utils/util")
-const fs = require("fs")
 const multiparty = require('multiparty')
 const response = util.response
 
@@ -41,47 +40,6 @@ let delWaresInfo = function (req, res) {
 		response(res, 300, err)
 	})
 }
-let uploadWarePic = function (req, res) {
-	let form = new multiparty.Form({ uploadDir: './public/images/' })
-	form.parse(req, async function (err, fileds, fileList) {
-		if (err) response(res, 201, err)
-		let files = fileList.files;
-
-		let filePath = []
-		let loop = files.map((item) => {
-			// return new Promise((resolve, reject) => {
-			// 	let originName = './public/images/' + item.originalFilename
-			// 	fs.rename(item.path, originName, function (err) {
-			// 		if (err) {
-			// 			reject(err)
-			// 		} else {
-			// 			filePath.push(originName);
-			filePath.push(item.path);
-			// 			resolve()
-			// 		}
-			// 	})
-			// });
-		})
-		try {
-			// await Promise.all(loop)
-			await (function () {
-				let { warseId } = fileds
-				let picList = []
-				filePath.forEach(() => {
-					picList.push(`(${warseId},?)`);
-				})
-				let sql = "INSERT wares_pic (wares_id, pic_address) VALUES " + picList.join(',') + ';'
-				mysql({ sql, params: filePath }).then(resoult => {
-					response(res, 200, '添加成功')
-				}).catch(err => {
-					response(res, 300, err)
-				})
-			})()
-		} catch (error) {
-			response(res, 201, err)
-		}
-	})
-}
 
 
 let waresInfoApi = [
@@ -99,11 +57,6 @@ let waresInfoApi = [
 		methods: 'post',
 		url: '/wares/delWaresInfo',
 		callback: delWaresInfo
-	},
-	{
-		methods: 'post',
-		url: '/wares/uploadWarePic',
-		callback: uploadWarePic
-	},
+	}
 ]
 module.exports = waresInfoApi

@@ -7,11 +7,14 @@ const userApi = require('../apis/users/user.js')
 const waresTypeApi = require('../apis/wares/waresType')
 // 商品信息
 const waresInfoApi = require('../apis/wares/waresInfo')
+// 商品图片
+const waresPicApi = require('../apis/wares/waresPic')
 
 const apis = [
 	...userApi,
 	...waresTypeApi,
-	...waresInfoApi
+	...waresInfoApi,
+	...waresPicApi
 ]
 
 for (const item of apis) {
