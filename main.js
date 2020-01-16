@@ -23,10 +23,11 @@ app.use('/api', api)
 // 	res.send(html)
 // })
 
-app.get('/public/images/*', function (req, res) {
 
-	res.sendFile( __dirname + req.path );
+app.get('/public/images/*', function (req, res) {
+	res.sendFile(__dirname + req.path);
 })
+
 app.use(express.static(path.resolve(__dirname, './dist')))
 app.get('/', function (req, res) {
 	const html = fs.readFileSync(path.resolve(__dirname, './dist'), 'utf-8')

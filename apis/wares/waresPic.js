@@ -6,7 +6,7 @@ const response = util.response
 
 
 let uploadWarePic = function (req, res) {
-	let form = new multiparty.Form({ uploadDir: './public/images/' })
+	let form = new multiparty.Form({ uploadDir: './public/images/waresImg/' })
 	form.parse(req, async function (err, fileds, fileList) {
 		if (err) response(res, 201, err)
 		let files = fileList.files;
@@ -20,9 +20,10 @@ let uploadWarePic = function (req, res) {
 			// 			reject(err)
 			// 		} else {
 			// 			filePath.push(originName);
+			item.path = item.path.replace(/\\/g,"/")
 			filePath.push(item.path);
 			// 			resolve()
-			// 		}
+			// 		}	
 			// 	})
 			// });
 		})
@@ -54,31 +55,35 @@ let delWaresPic = async function (req, res) {
 	ids.forEach(() => {
 		sqlCondition.push('pic_id = ?')
 	})
-
-	await (function () {
-		return new Promise((resolve, reject) => {
-			let sql = "SELECT pic_address url FROM wares_pic WHERE " + sqlCondition.join(' OR ') + ';'
-			mysql({ sql, params: ids }).then(resoult => {
-				resoult.forEach(item => {
-					fs.unlinkSync(item.url, function (err) {
-						if (err) { reject(err) }
+	try {
+		await (function () {
+			return new Promise((resolve, reject) => {
+				let sql = "SELECT pic_address url FROM wares_pic WHERE " + sqlCondition.join(' OR ') + ';'
+				mysql({ sql, params: ids }).then(resoult => {
+					resoult.forEach(item => {
+						fs.unlinkSync(item.url, function (err) {
+							if (err) { reject(err) }
+						})
 					})
+					resolve()
+				}).catch(err => {
+					reject(err)
 				})
-				resolve()
-			}).catch(err => {
-				reject(err)
 			})
-		})
-	})()
+		})()
 
-	await (function () {
-		let sql = "DELETE FROM wares_pic WHERE " + sqlCondition.join(' OR ') + ';'
-		mysql({ sql, params: ids }).then(resoult => {
-			response(res, 200, '删除成功')
-		}).catch(err => {
-			response(res, 300, err)
-		})
-	})()
+		await (function () {
+			let sql = "DELETE FROM wares_pic WHERE " + sqlCondition.join(' OR ') + ';'
+			mysql({ sql, params: ids }).then(resoult => {
+				response(res, 200, '删除成功')
+			}).catch(err => {
+				response(res, 300, err)
+
+			})
+		})()
+	} catch (error) {
+		response(res, 300, error)
+	}
 
 }
 
@@ -86,8 +91,7 @@ let getWarePic = function (req, res) {
 	let { waresId } = req.query
 	let sql = "SELECT pic_id pId, pic_address picUrl FROM wares_pic WHERE wares_id = ?;"
 	mysql({ sql, params: [waresId] }).then(resoult => {
-		// response(res, 200, resoult)
-		res.send(resoult)
+		response(res, 200, resoult)
 	}).catch(err => {
 		response(res, 300, err)
 	})
